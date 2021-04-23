@@ -9,26 +9,26 @@ if __name__ == '__main__':
     chpts = get_chpts()
     merger = PdfFileMerger()
     # split into chunks and append to completed file
-    for i in range(len(fns)):
+    for i in range(1,9):
         
         # pdf_name = "/Users/brandonthio/Python/Get_Oxford_Textbook/Oxford_Medical_Approach_to_Medical Decision_Making/med-9780190862800-chapter-{}.pdf".format(i)
         
         try:
-            fn = fns[i]
+            fn = "C:/Users/Admin/med_txtbk_scrape/merged{}.pdf".format(i)
     
-            pdf_file = open(fn, 'rb')
-            merger.append(pdf_file, bookmark=chpts[i])
-            print("MERGING {} {}".format(fn, chpts[i]))
+            f = open(fn, 'rb')
+            merger.append(f)
+            print("MERGING {}".format(fn))
 
         except Exception as e:
 
             print(e, fn)
 
     print("SAVING MERGED PDF")
-
-    with open("/Users/brandonthio/Python/Get_Oxford_Textbook/completed_file3.pdf", "ab+") as save_file:
     
-        merger.write(save_file)
+    save_fn = "C:/Users/Admin/med_txtbk_scrape/merged.pdf" 
+    with open(save_fn, 'wb+') as save:
+        merger.write(save)
         merger.close()
 
     print("SUCCESS")

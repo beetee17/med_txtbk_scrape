@@ -40,7 +40,7 @@ def get_fns():
                 fn = fn.replace('/9780198784906/', '--')
                 # fn = fn.replace('/', '-')
                 fn = fn.replace('med--', '')
-                fn = '/Users/brandonthio/Downloads/' + fn +'.pdf'
+                fn = 'C:/Users/Admin/med_txtbk_scrape/ESC/' + fn +'.pdf'
                 
                 fns.append(fn)
 
@@ -57,4 +57,4 @@ if __name__ == '__main__':
     for i in range(50):
         if i% 50==0:
             print(i)
-        print(chpts[i])
+        print(fns[i])

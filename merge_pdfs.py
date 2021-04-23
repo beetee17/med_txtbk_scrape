@@ -8,7 +8,7 @@ if __name__ == '__main__':
     fns = get_fns()
     chpts = get_chpts()
     merger = PdfFileMerger()
-    # split into chunks and append to completed file
+    # split into chunks and append to completed file if # of pdf files > 150
     for i in range(1,9):
         
         # pdf_name = "/Users/brandonthio/Python/Get_Oxford_Textbook/Oxford_Medical_Approach_to_Medical Decision_Making/med-9780190862800-chapter-{}.pdf".format(i)

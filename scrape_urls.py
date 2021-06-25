@@ -40,8 +40,8 @@ def download_pdf(mouse):
 def login(driver):
 
     login_url = "https://proxylogin.nus.edu.sg/libproxy1/public/login.asp?logup=false"
-    user = "nusstu\E0014980"
-    pw = "Yoshi4498&*("
+    USER = r"nusstu\E0014980"
+    PW = "Yoshi4498#$%"
     
     wait = ui.WebDriverWait(driver, 20)
 
@@ -54,11 +54,11 @@ def login(driver):
 
     # user name/email field
     user = driver.find_element(By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[2]/td[2]/input")
-    user.send_keys("nusstu\E0014980")
+    user.send_keys(USER)
 
     #password field
     pw = driver.find_element(By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[3]/td[2]/input")
-    pw.send_keys("Yoshi4498&*(")
+    pw.send_keys(PW)
 
     # login button
     confirm = wait.until(
@@ -111,11 +111,13 @@ if __name__ == '__main__':
 
     login(driver)
     ## Oxford Fundamentals of Surgery (110 Chapters) URL:https://oxfordmedicine-com.libproxy1.nus.edu.sg/view/10.1093/med/9780199665549.001.0001/med-9780199665549-chapter-{}?print=pdf'.format(i)
+    
     import ESC_scrape
 
-    urls = ESC_scrape.get_urls()
+    html_file = 'neuro_handbook'
+    urls = ESC_scrape.get_urls(html_file)
     
-    for i in range(310, len(urls)):
+    for i in range(len(urls)):
         print(i, urls[i])
         driver.get(urls[i])
         sleep(6)
@@ -124,19 +126,6 @@ if __name__ == '__main__':
         download_pdf(mouse)
         sleep(3)
 
-    # for i in range(1,98):
-
-    #     ## Oxford Apprach to Medical Decision Making (97 Chapters)
-    #     txt_bk_url = 'https://oxfordmedicine-com.libproxy1.nus.edu.sg/view/10.1093/med/9780190862800.001.0001/med-9780190862800-chapter-{}?print=pdf'.format(i)
-    #     driver.get(txt_bk_url)
-    #     sleep(13)
-
-    #     mouse = Controller()
-    #     download_pdf(mouse)
-    #     sleep(3)
-
-
-    # Initialise mouse controller
 
 
     print("Program Stopped")

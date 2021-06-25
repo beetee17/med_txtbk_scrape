@@ -1,20 +1,26 @@
 from bs4 import BeautifulSoup as bs
 
-def get_urls():
+def get_urls(html_file, verbose=False):
     
-    with open('ESC.html', 'r') as f:
+    with open(html_file + '.html', 'r') as f:
         soup = bs(f, 'html.parser')
         urls = []
         for li in soup.find_all('li', class_=['notcurrent', 'chapterType', 'level3']):
         
             try:
-                urls.append("https://oxfordmedicine-com.libproxy1.nus.edu.sg{}?print=pdf".format(li.a['href']))
-                # print(li.a['href'][-3:])
+                url = "https://oxfordmedicine-com.libproxy1.nus.edu.sg{}?print=pdf".format(li.a['href'])
+                urls.append(url)
+                print(url)
             except:
                 continue
+    if verbose:
+        for i in range(50):
+            print(i, urls[i])
+
     return urls
-def get_chpts():
-    with open('ESC.html', 'r') as f:
+
+def get_chpts(html_file):
+    with open(html_file + '.html', 'r') as f:
         soup = bs(f, 'html.parser')
         chpts = []
         for li in soup.find_all('li', class_=['notcurrent', 'chapterType', 'level3']):
@@ -26,35 +32,56 @@ def get_chpts():
             except:
                 continue
     return chpts
-def get_fns():
+
+def get_fns(html_file, folder):
     
-    with open('ESC.html', 'r') as f:
+    with open(html_file + '.html', 'r') as f:
         soup = bs(f, 'html.parser')
         fns = []
         for li in soup.find_all('li', class_=['notcurrent', 'chapterType', 'level3']):
         
             try:
                 fn = li.a['href']
+                
                 fn = fn[fn.find('/view/10.1093/')+14:]
                 fn = fn[:fn.find('.001.0001')] + fn[fn.find('.001.0001')+9:]
-                fn = fn.replace('/9780198784906/', '--')
-                # fn = fn.replace('/', '-')
-                fn = fn.replace('med--', '')
-                fn = 'C:/Users/Admin/med_txtbk_scrape/ESC/' + fn +'.pdf'
+                fn = fn[18:]
+                fn = '/Users/brandonthio/Downloads/{}/'.format(folder) + fn +'.pdf'
                 
                 fns.append(fn)
 
-                # print(li.a['href'][-3:])
             except:
                 continue
     return fns
 
-    # https://oxfordmedicine-com.libproxy1.nus.edu.sg/view/10.1093/med/9780198784906.001.0001/med-9780198784906-chapter-1?print=pdf
+   
+
+def rename_files(html_file, folder, verbose=False):
+    import os
+
+    chpts = get_chpts(html_file)
+    fns = get_fns(html_file, folder)
+    
+    for i in range(len(fns)):
+        
+        new_fn = os.path.join(os.path.dirname(fns[i]), chpts[i] + '.pdf')
+
+        try:
+            os.rename(fns[i], new_fn)
+
+            if verbose:
+                print('RENAMING', os.path.basename(fns[i]), 'TO', chpts[i])
+
+        except Exception as e:
+            print(e)
+
+    
+        
+
+
 if __name__ == '__main__':
-    fns = get_fns()
-    chpts = get_chpts()
-    print(len(chpts))
-    for i in range(50):
-        if i% 50==0:
-            print(i)
-        print(fns[i])
+    html_file = input('HTML Filename:\n')
+    folder = input('DOWNLOAD FOLDER NAME:\n')
+    rename_files(html_file, folder, verbose=True)
+
+    

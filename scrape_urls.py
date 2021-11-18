@@ -13,6 +13,7 @@ from pynput.mouse import Button, Controller
 from pynput import keyboard
 from time import sleep
 
+
 # https://pythonhosted.org/pynput/mouse.html
 
 
@@ -24,45 +25,57 @@ def download_pdf(mouse):
     # mouse.position))
     sleep(1)
     mouse.click(Button.left, 1)
-    
 
-    # 
-    mouse.position = (193, 200)
+    # save page as...
+    mouse.position = (185, 230)
 
     sleep(1)
     mouse.click(Button.left, 1)
 
-    #
-    mouse.position = (994, 603)
+    # file broswer confirm button
+    mouse.position = (990, 690)
     sleep(4)
     mouse.click(Button.left, 1)
+
 
 def login(driver):
 
     login_url = "https://proxylogin.nus.edu.sg/libproxy1/public/login.asp?logup=false"
     USER = r"nusstu\E0014980"
     PW = "Yoshi4498#$%"
-    
+
     wait = ui.WebDriverWait(driver, 20)
 
     driver.get(login_url)
     time.sleep(2)
 
-
     # select type of user
-    Select(driver.find_element(By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[1]/td[2]/select")).select_by_index(1)
+    Select(
+        driver.find_element(
+            By.XPATH,
+            "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[1]/td[2]/select",
+        )
+    ).select_by_index(1)
 
     # user name/email field
-    user = driver.find_element(By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[2]/td[2]/input")
+    user = driver.find_element(
+        By.XPATH,
+        "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[2]/td[2]/input",
+    )
     user.send_keys(USER)
 
-    #password field
-    pw = driver.find_element(By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[3]/td[2]/input")
+    # password field
+    pw = driver.find_element(
+        By.XPATH,
+        "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/table/tbody/tr[3]/td[2]/input",
+    )
     pw.send_keys(PW)
 
     # login button
     confirm = wait.until(
-        ec.element_to_be_clickable((By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/input[2]"))
+        ec.element_to_be_clickable(
+            (By.XPATH, "/html/body/table[2]/tbody/tr[3]/td[4]/div[2]/form/input[2]")
+        )
     )
     sleep(1)
     confirm.click()
@@ -84,49 +97,43 @@ def login(driver):
 # action.key_down(Keys.COMMAND).send_keys("s").perform()
 
 
-
-
-
-
-
 # print("Program Stopped")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+
     def on_press(key):
         pass
-
 
     def on_release(key):
         global running
         if key == keyboard.Key.esc:
             running = False
 
-
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()
-
 
     driver = webdriver.Chrome("/Users/brandonthio/Python/chromedriver")
 
     login(driver)
     ## Oxford Fundamentals of Surgery (110 Chapters) URL:https://oxfordmedicine-com.libproxy1.nus.edu.sg/view/10.1093/med/9780199665549.001.0001/med-9780199665549-chapter-{}?print=pdf'.format(i)
-    
+
     import ESC_scrape
+    import os
 
-    html_file = 'neuro_handbook'
-    urls = ESC_scrape.get_urls(html_file)
-    
-    for i in range(len(urls)):
-        print(i, urls[i])
-        driver.get(urls[i])
-        sleep(6)
+    html_files = [x for x in os.listdir("html") if x.endswith(".html")]
 
-        mouse = Controller()
-        download_pdf(mouse)
-        sleep(3)
+    for html in html_files:
 
+        urls = ESC_scrape.get_urls(html)
 
+        for i in range(len(urls)):
+            print(i, urls[i])
+            driver.get(urls[i])
+            sleep(6)
 
-    print("Program Stopped")
+            mouse = Controller()
+            download_pdf(mouse)
+            sleep(3)
 
+        print("Program Stopped")
